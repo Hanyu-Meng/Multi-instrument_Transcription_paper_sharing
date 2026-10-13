@@ -10,6 +10,7 @@ for(const lang of ['zh','en']){
  const data=sandbox.window.buildContent(lang);out+=`## ${lang==='zh'?'中文版':'English'}\n\n`;
  for(const [i,s] of data.slides.entries()){
   out+=`### ${String(i+1).padStart(2,'0')}. ${clean(s.title)}\n\n${clean(s.lead)}\n\n${s.note}\n\n`;
+  if(s.paperLinks?.length)out+=s.paperLinks.map(r=>`[${r.label}](${r.url})`).join(' · ')+'\n\n';
   if(s.sources.length)out+=s.sources.map(r=>`[${r.label}](${r.url})`).join(' · ')+'\n\n';
  }
 }

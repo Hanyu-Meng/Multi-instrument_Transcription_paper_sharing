@@ -2,6 +2,19 @@
 
 Research snapshot: **2026-10-13**. This educational website uses primary papers and official project sources. Results are author-reported, not independently reproduced. The interpretation of limitations is review commentary, not an author claim unless explicitly attributed.
 
+## Harmonica version, task and result provenance
+
+- Longshen Ou, Héctor Martel, Joe Hennessy-Priest, Taemin Cho. *Harmonica: Accurate and Lightweight Instrument-Agnostic Music Transcription*. [arXiv:2609.04640v1](https://arxiv.org/abs/2609.04640v1), submitted 2026-09-04; the arXiv comments state “Submitted to ICASSP 2027.” This is not evidence of acceptance. [Full text](https://arxiv.org/html/2609.04640v1) · [author demo](https://www.oulongshen.xyz/amt).
+- [§3.1](https://arxiv.org/html/2609.04640v1#S3.SS1): the input contains **one instrument with unknown identity**. Notes may overlap in time except at the same pitch. The target is onset, offset and pitch, without instrument attribution. Instrument-agnostic generalization across stems and instrument-labelled transcription of a full mixture are separate tasks.
+- [§3.2–3.3](https://arxiv.org/html/2609.04640v1#S3.SS2): 16 kHz audio, CQT with three bins per semitone and 32 ms frames; frequency downsampling yields one bin per semitone. The trunk alternates harmonic convolution with ResNet processing. Three frequency-grouped LSTM heads predict onset, sustain and offset; **offset is auxiliary supervision and is not used in note decoding**.
+- [§3.4](https://arxiv.org/html/2609.04640v1#S3.SS4): frequency shifts collect harmonic and subharmonic evidence before a 1×1 convolution. The reported **28.5% parameter reduction** is relative to HD-Conv **within harmonic layers**, not across the whole network.
+- [§4.1](https://arxiv.org/html/2609.04640v1#S4.SS1): URMP and Slakh2100 use track-wise audio–MIDI pairs, excluding mixtures. Eight baselines are retrained under the authors' multi-source protocol; MT3, Basic Pitch and MuScriptor use released checkpoints. The MuScriptor comparator is the **medium checkpoint**, listed as 306M in Table 1 and 306.5M in the full comparison tables (Tables 4–5). It is not the 1.3B experiment discussed in this site's MuScriptor chapter.
+- [Figure 1](https://arxiv.org/html/2609.04640v1#S1.F1) and the abstract: nano has 26.3K parameters and **development-set** Frame F1 0.796. This value is not a mean of the eight test-set results. [Table 1](https://arxiv.org/html/2609.04640v1#S4.T1) reports its inference speed as 1,622.5× real time, measured on an RTX 4090; medium is 679K parameters and 848.5× real time. These are author-reported throughput measurements under their setup.
+- [Table 2 / §4.3](https://arxiv.org/html/2609.04640v1#S4.T2): medium-model ablations, held-out development set, means of three random seeds. OnPOff F1 is 0.635 with no harmonic aggregation, 0.731 with single-depth shift-and-aggregate, and 0.745 with multi-depth shift-and-aggregate. Multi-depth HD-Conv also gives 0.745, with 39.9% more parameters per harmonic layer relative to shift-and-aggregate. The percentages use opposite denominators and refer to the same layer-level comparison.
+- [§4.2](https://arxiv.org/html/2609.04640v1#S4.SS2): results are qualified by dataset and metric. HPPNet-sp leads on out-of-domain MAPS; SFT-CRNN slightly exceeds Harmonica x-large on URMP-stem OnP. The review does not turn the results into an unconditional claim of superiority.
+
+Harmonica 专章将任务边界、结构原图、谐波卷积机制与实验结果分别呈现。图1是开发集表现，表2是 medium 模型的三种子消融；完整混音转录、乐器归属和 MuScriptor 自身论文的 1.3B 结果均不属于该比较协议。
+
 ## MuScriptor version and result provenance
 
 - [MuScriptor, arXiv v2, 2026-08-03](https://arxiv.org/abs/2607.08168v2), marked ISMIR 2026 camera-ready. [Full text](https://arxiv.org/html/2607.08168v2).
@@ -95,6 +108,22 @@ Sungkyun Chang, Emmanouil Benetos, Holger Kirchhoff, Simon Dixon. *YourMT3+: Mul
 - The paper uses the [arXiv perpetual, non-exclusive distribution license](https://arxiv.org/licenses/nonexclusive-distrib/1.0/license.html), **not a Creative Commons license**. This figure is included as a limited, attributed excerpt for scholarly review; author copyright is retained. The arXiv license is not represented as an open reuse license, and the image is not covered by the website's code license.
 - Reading boundary: the depicted variant is `YPTF.MoE+Multi`. Its detailed input is a log-magnitude spectrogram plus a ResNet pre-encoder (§3.1), despite the generic Mel wording in the figure caption. Cross-dataset stem augmentation is a training procedure.
 
+### Harmonica — Figures 2 and 1
+
+Longshen Ou, Héctor Martel, Joe Hennessy-Priest, Taemin Cho. *Harmonica: Accurate and Lightweight Instrument-Agnostic Music Transcription*, September 2026 preprint / [arXiv:2609.04640v1](https://arxiv.org/abs/2609.04640v1).
+
+| Figure | Local file | Original source | PDF |
+| --- | --- | --- | --- |
+| Fig. 2, architecture and harmonic-aggregation inset | `site/assets/papers/harmonica-architecture.png` | [Figure and caption](https://arxiv.org/html/2609.04640v1#S3.F2) · [original HTML PNG](https://arxiv.org/html/2609.04640v1/model_architecture.png) | [p. 3](https://arxiv.org/pdf/2609.04640v1#page=3) |
+| Fig. 1, model size and development-set Frame F1 | `site/assets/papers/harmonica-size-performance.svg` | [Figure and caption](https://arxiv.org/html/2609.04640v1#S1.F1) · [original SVG](https://arxiv.org/html/2609.04640v1/size_vs_perf.svg) | [p. 1](https://arxiv.org/pdf/2609.04640v1#page=1) |
+
+- Figure 2 is rendered from PDF page 3 at 500 dpi, cropped to `(54, 71, 299, 246)` PDF points from the top-left, yielding 1701 × 1215 pixels. The surrounding text and original caption are excluded; all figure labels, arrows and note examples remain. There is no redraw, recoloring, added annotation or alteration within the figure. Attribution and explanatory captions appear beside the image.
+- Figure 1 is the original arXiv SVG, reproduced unchanged. Its horizontal axis is parameter count on a logarithmic scale; its vertical axis is development-set Frame F1. It does not plot runtime or test-set averages.
+- The paper uses the [arXiv perpetual, non-exclusive distribution license](https://arxiv.org/licenses/nonexclusive-distrib/1.0/license.html), **not a Creative Commons license**. These figures are limited, attributed excerpts for scholarly review, with copyright retained by the original authors. The arXiv license is not described as an open reuse license; the figures are not covered by the website's code license.
+- Figure 2 reading boundary: its “Pitch Head” produces sustain activations. Onset and sustain drive decoding; the offset head provides auxiliary supervision only. The inset's stacked feature planes denote channels, not instruments. Harmonic aggregation collects evidence along frequency within one time frame. The text, rather than an explicit separate diagram block, specifies the frontend frequency downsampling.
+
+Harmonica 图2截取自原文 PDF 第3页，图1保留原始 SVG。图2用于解释音频到音符的结构，图1用于讨论开发集上的参数量与精度；版权保留于原作者。
+
 ### MuScriptor — Figures 1 and 4
 
 Simon Rouard, Michael Krause, Axel Roebel, Carl-Johann Simon-Gabriel, Alexandre Défossez. *MuScriptor: An Open Model for Multi-Instrument Music Transcription*, ISMIR 2026 / [arXiv:2607.08168v2](https://arxiv.org/abs/2607.08168v2).
@@ -117,6 +146,7 @@ MuScriptor 的架构示意依据 §3.2 重构；原文图1与图4分别提供定
 - `site/assets/diagrams/task-{zh,en}.svg`: mixture to instrument-labelled notes; separation is not implied as mandatory.
 - `site/assets/diagrams/ambiguity-{zh,en}.svg`: conceptual harmonic overlap, not measured spectral amplitudes.
 - `site/assets/diagrams/methods-{zh,en}.svg`: conceptual method families, not a performance ranking.
+- Harmonica 220 Hz example and shift/concatenate/aggregate flow: original HTML schematic of selected harmonic relations, not measured spectra or an original paper figure.
 - Hero waveform and piano roll: original schematic.
 - Web Audio example: original short synthetic notes using browser oscillators. Piano/bass/flute timbres are approximations. This is not model inference or a model-output comparison.
 - Stage bar chart: original redraw of MuScriptor Table 1, with protocol displayed beside it.
@@ -126,4 +156,4 @@ The diagrams, layout and paraphrased bilingual teaching text were prepared for t
 
 ## Other primary sources
 
-The website’s 12-entry library and README link all original sources. Essential boundaries: Onsets and Frames and MAESTRO are piano-only; Slakh is a dataset; Jointist is cited as a 2023 preprint; MT3 is ICLR 2022; YourMT3+ is MLSP 2024. The 2025 AMT Challenge report (2026) uses short synthesized test pieces, while Harmonica is instrument-agnostic and TUTTI targets notation. These are not interchangeable tasks or scores.
+The website’s 12-entry library and README link all original sources. Essential boundaries: Onsets and Frames and MAESTRO are piano-only; Slakh is a dataset; Jointist is cited as a 2023 preprint; MT3 is ICLR 2022; YourMT3+ is MLSP 2024. The 2025 AMT Challenge report (2026) uses short synthesized test pieces. Harmonica has a dedicated chapter on instrument-agnostic transcription of individual instruments or stems, while TUTTI targets notation. These are not interchangeable tasks or scores.

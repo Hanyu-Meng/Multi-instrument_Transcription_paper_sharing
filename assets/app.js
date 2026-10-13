@@ -88,6 +88,7 @@
   }
 
   function render() {
+    $('#figure-dialog')?.close();
     stopAudio(true);
     state.data = window.buildContent(state.lang);
     state.paired = window.buildContent(state.lang === 'zh' ? 'en' : 'zh');
@@ -110,7 +111,7 @@
       return `<section id="${escape(slide.id)}" class="slide${index === 0 ? ' hero' : ''}" aria-labelledby="heading-${escape(slide.id)}" data-chapter="${escape(slide.chapter)}">
         <div class="eyebrow"><span>${String(index + 1).padStart(2, '0')} / ${String(state.data.slides.length).padStart(2, '0')}</span><span>${escape(slide.kicker)}</span></div>
         <div class="slide-heading"><${index === 0 ? 'h1' : 'h2'} id="heading-${escape(slide.id)}">${slide.title}</${index === 0 ? 'h1' : 'h2'}></div>
-        ${slide.lead ? `<p class="lead">${slide.lead}</p>` : ''}<div class="content">${slide.html || ''}</div>
+        ${slide.lead ? `<p class="lead">${slide.lead}</p>` : ''}${slide.paperLinks?.length ? `<nav class="paper-access" aria-label="${state.lang === 'zh' ? '论文原文入口' : 'Original paper links'}">${slide.paperLinks.map(source => externalLink(source.label, source.url)).join('')}</nav>` : ''}<div class="content">${slide.html || ''}</div>
         ${slide.sources?.length ? `<div class="sources"><span>${escape(tr().sources)}:</span>${slide.sources.map(source => externalLink(source.label, source.url)).join('<span aria-hidden="true">·</span>')}</div>` : ''}
         ${slide.note ? `<aside class="speaker-note"><strong>${escape(tr().note)}</strong><div>${slide.note}</div></aside>` : ''}
       </section>`;
@@ -299,9 +300,32 @@
     } catch (_) { stopAudio(true); audioStatus(tr().audioUnavailable); }
   }
 
+  function openFigure(button) {
+    const dialog = $('#figure-dialog');
+    const image = $('#figure-dialog-image');
+    $('#figure-dialog-title').textContent = button.dataset.figureTitle;
+    image.src = button.dataset.figureSrc;
+    image.alt = button.querySelector('img').alt;
+    const source = $('#figure-source-link');
+    source.href = safeLink(button.dataset.figureSource);
+    source.textContent = state.lang === 'zh' ? '在 arXiv 中查看对应原文 ↗' : 'View the corresponding source on arXiv ↗';
+    $('#figure-close').textContent = state.lang === 'zh' ? '关闭 ×' : 'Close ×';
+    $('#figure-zoom').textContent = state.lang === 'zh' ? '原始尺寸' : 'Original size';
+    $('#figure-zoom').setAttribute('aria-pressed', 'false');
+    dialog.classList.remove('zoomed');
+    dialog.showModal();
+  }
+  $('#figure-close').addEventListener('click', () => $('#figure-dialog').close());
+  $('#figure-dialog').addEventListener('click', event => { if (event.target === event.currentTarget) event.currentTarget.close(); });
+  $('#figure-zoom').addEventListener('click', event => {
+    const zoomed = $('#figure-dialog').classList.toggle('zoomed');
+    event.currentTarget.setAttribute('aria-pressed', String(zoomed));
+    event.currentTarget.textContent = state.lang === 'zh' ? (zoomed ? '适应窗口' : '原始尺寸') : (zoomed ? 'Fit to window' : 'Original size');
+  });
   document.addEventListener('click', event => {
     const element = event.target.closest('button, a');
     if (!element) return;
+    if (element.matches('[data-figure-src]')) { openFigure(element); return; }
     if (element.matches('[data-start]')) { event.preventDefault(); setMode('present'); return; }
     if (element.matches('[data-next]')) { event.preventDefault(); move(1); return; }
     if (element.matches('[data-error]')) { updateError(element.dataset.error); return; }
@@ -341,6 +365,7 @@
   });
   document.addEventListener('fullscreenchange', updateFullscreenLabel);
   document.addEventListener('keydown', event => {
+    if ($('#figure-dialog').open) return;
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.target.closest('input, select, textarea, [contenteditable="true"]')) return;
     if (event.key === 'Escape' && state.mode === 'present') { event.preventDefault(); setMode('read'); return; }
     if (state.mode !== 'present') return;

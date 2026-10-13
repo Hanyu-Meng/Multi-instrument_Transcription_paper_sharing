@@ -13,3 +13,8 @@
 
 /* Keep the source link visible inside the modal in presentation mode. */
 .presentation .figure-dialog footer{display:block}#figure-mu-notes .figure-open img{max-height:620px}.presentation #figure-mu-notes .figure-open img{max-height:500px}
+
+.harmonic-context{margin:0;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:9px}.harmonic-context>figcaption{font-size:13px;color:var(--teal);margin-bottom:18px}.harmonic-bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.harmonic-bins>div{padding:20px;border:1px solid var(--line);border-radius:8px;background:#f0f2eb}.harmonic-bins span{font-size:12px;color:var(--muted)}.harmonic-bins b{display:block;font:600 26px/1.5 Manrope,sans-serif;margin:8px 0}.harmonic-bins p{font-size:13px;color:#53605f;line-height:1.7}.harmonic-bins .candidate{background:var(--ink);color:white;border-color:var(--ink)}.harmonic-bins .candidate span,.harmonic-bins .candidate p{color:#d5e3df}
+@media(max-width:780px){.harmonic-context{padding:15px}.harmonic-bins{grid-template-columns:1fr;gap:10px}.harmonic-bins>div{padding:16px}.harmonic-bins b{font-size:23px}}
+
+#figure-harmonica-model .figure-open img{max-height:620px}.presentation #figure-harmonica-model .figure-open img{max-height:500px}

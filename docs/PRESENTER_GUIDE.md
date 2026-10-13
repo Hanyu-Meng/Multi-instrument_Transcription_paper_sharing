@@ -102,7 +102,15 @@ MT3 将不同数据集的音频与标注转换为统一的输入输出格式，�
 
 [Perceiver TF · 2023](https://arxiv.org/abs/2306.10785) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 12. 评测指标：音高、起止时间与乐器归属
+### 12. 评测指标：匹配规则与 F1
+
+先定义什么算匹配，再统计误报与漏检。同一个预测，在不同指标下可能得到不同的评价。
+
+TP 为满足当前指标条件的一对一匹配，FP 为未匹配预测，FN 为未匹配参考。上面的计数例子只解释一个片段的音符级 F1；不能据此假设论文总分一定由全数据集 TP/FP/FN 直接汇总。Frame F1 则在时间—音高活动网格上计算精确率和召回率。Onset/OnP 不检查结束时间或乐器；Offset/OnPOff 同时要求音高、起音与结束时间，并不是只评 offset。Harmonica 的表1以 OnP 与 Frm 为主，OnPOff 也见表2与完整结果附录。原文的参数量和 xRT 属于效率指标：xRT = 音频时长 / 处理时长，越大越快，不能当作转写准确度或流式延迟。
+
+[MuScriptor · 指标 §3.3](https://arxiv.org/html/2607.08168v2#S3.SS3) · [Harmonica · 指标 §4.1](https://arxiv.org/html/2609.04640v1#S4.SS1)
+
+### 13. 评测指标：音高、起止时间与乐器归属
 
 F1 综合精确率与召回率。帧级、起音、起止时间、乐器归属检查的是不同问题，不能把它们混在同一排行榜里。
 
@@ -110,7 +118,7 @@ F1 综合精确率与召回率。帧级、起音、起止时间、乐器归属�
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017v4) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 13. 数据瓶颈：合成监督与真实录音
+### 14. 数据瓶颈：合成监督与真实录音
 
 要训练转录，音频与每个音符必须对齐。真正昂贵的是同时拥有真实的声音、完整的标签与可靠的时间。
 
@@ -118,7 +126,7 @@ F1 综合精确率与召回率。帧级、起音、起止时间、乐器归属�
 
 [Slakh · 2019](https://arxiv.org/abs/1909.08494) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [MAESTRO · dataset paper](https://arxiv.org/abs/1810.12247)
 
-### 14. Harmonica：跨乐器泛化的逐帧转录
+### 15. Harmonica：跨乐器泛化的逐帧转录
 
 Longshen Ou、Héctor Martel、Joe Hennessy-Priest、Taemin Cho · BandLab。一个模型转录不同有音高乐器的独奏或独立分轨，可处理复音；输出音高与起止时间，不预测乐器归属。
 
@@ -128,7 +136,7 @@ Longshen Ou、Héctor Martel、Joe Hennessy-Priest、Taemin Cho · BandLab。一
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1)
 
-### 15. 谐波卷积：这个频率是基频，还是别的音的泛音？
+### 16. 谐波卷积：这个频率是基频，还是别的音的泛音？
 
 对候选频率 f，同时查看整数倍与分频位置的证据。核心操作是沿频率轴平移特征、按通道拼接，再用1×1卷积学习聚合；这一过程在多个网络深度重复。
 
@@ -138,7 +146,7 @@ Longshen Ou、Héctor Martel、Joe Hennessy-Priest、Taemin Cho · BandLab。一
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1)
 
-### 16. Harmonica：准确率、规模与评测边界
+### 17. Harmonica：准确率、规模与评测边界
 
 模型从26.3K参数的nano扩展到15.1M的x-large。阅读结果时，要区分开发集曲线、各测试集分数，以及指定硬件上的推断速度。
 
@@ -148,7 +156,7 @@ Longshen Ou、Héctor Martel、Joe Hennessy-Priest、Taemin Cho · BandLab。一
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 17. MuScriptor：面向真实音乐的多乐器转录
+### 18. MuScriptor：面向真实音乐的多乐器转录
 
 Rouard、Krause 等 · Kyutai × Mirelo × IRCAM。核心是仅解码器 Transformer，以及“合成预训练 → 真实微调 → 强化学习后训练”的完整路线。
 
@@ -158,7 +166,7 @@ MuScriptor 的核心是仅解码器架构与分阶段数据、训练策略的结
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 18. 模型架构：音频前缀与自回归事件解码
+### 19. 模型架构：音频前缀与自回归事件解码
 
 把一段音乐的频谱投影为向量，与可选的乐器条件一起送入仅解码器 Transformer，然后逐个预测音乐事件。
 
@@ -168,7 +176,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Tokenizer · pinned source](https://github.com/muscriptor/muscriptor/blob/7f213afecf23bd6a1b8672aa223690ee9807cefb/muscriptor/tokenizer/notes.py)
 
-### 19. 三阶段训练：合成预训练、真实微调与后训练
+### 20. 三阶段训练：合成预训练、真实微调与后训练
 
 模型先拥有大量精确标签，再接触真实混音，最后用少量人工核验数据优化预测质量。规模与标注质量在不同阶段发挥作用。
 
@@ -178,7 +186,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 20. 原文消融：合成预训练在何时最有帮助
+### 21. 原文消融：合成预训练在何时最有帮助
 
 图4控制真实数据的使用比例，对比“有合成预训练”与“无合成预训练”。它直接检验合成数据在真实标签稀缺时的作用。
 
@@ -188,7 +196,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 21. 乐器条件与跨片段一致性
+### 22. 乐器条件与跨片段一致性
 
 乐器条件可以让跨片段的身份更稳定，也能只请求一部分声部。但评测时给出真实乐器列表，与完全盲转录不是同一种设定。
 
@@ -198,7 +206,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 22. 实验结果：训练阶段与跨数据集表现
+### 23. 实验结果：训练阶段与跨数据集表现
 
 下面只比较同一张论文表中的训练阶段。它支持这条训练路线的价值，但没有把数据、规模与架构的贡献完全拆开。
 
@@ -208,7 +216,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 23. 原文案例：训练阶段如何改变音符错误
+### 24. 原文案例：训练阶段如何改变音符错误
 
 图1在同一吉他片段上对照 YourMT3+ 与 MuScriptor 的不同训练阶段。结合漏检和误报的位置，可以把汇总指标还原为具体的音符错误。
 
@@ -218,7 +226,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 24. 局限：表示能力、评测设定与可复现性
+### 25. 局限：表示能力、评测设定与可复现性
 
 把模型变得更有用，不等于问题已经解决。评测协议、表示能力和可复现性，仍然影响我们如何解读结果。
 
@@ -228,7 +236,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Official repository · license / exports](https://github.com/muscriptor/muscriptor)
 
-### 25. 当前研究方向
+### 26. 当前研究方向
 
 最新方向没有收敛到一个“万能模型”。预训练表征、推理效率和直接记谱，分别回答不同问题。
 
@@ -236,7 +244,7 @@ MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为�
 
 [AMT Challenge · 2026](https://arxiv.org/abs/2603.27528) · [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1) · [TUTTI · 2026](https://arxiv.org/abs/2609.00640)
 
-### 26. 开放研究问题
+### 27. 开放研究问题
 
 多乐器转录的核心，是让音高、时间与乐器身份同时可信。MuScriptor展示了数据与后训练的力量，也让评测和表示边界更值得讨论。
 
@@ -338,7 +346,15 @@ The figure shows the final YPTF.MoE+Multi variant. For its exact input, use the 
 
 [Perceiver TF · 2023](https://arxiv.org/abs/2306.10785) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 12. Evaluation: pitch, note boundaries and instrument attribution
+### 12. Evaluation metrics: matching rules and F1
+
+Define a match first, then count false positives and missed notes. Different metrics can judge the same prediction differently.
+
+TP counts one-to-one matches under the chosen criteria; FP counts unmatched predictions and FN unmatched references. The worked example explains note-level F1 for one excerpt, not an assumption that a paper pools counts across its full dataset. Frame F1 instead computes precision and recall over active time–pitch cells. Onset/OnP ignores offsets and instruments; Offset/OnPOff requires pitch, onset and offset, not just offset. Harmonica Table 1 emphasizes OnP and Frm, while OnPOff also appears in Table 2 and the full-results appendix. Parameter count and xRT measure efficiency: xRT = audio duration / processing time, higher is faster; neither measures transcription accuracy or establishes streaming latency.
+
+[MuScriptor · metrics §3.3](https://arxiv.org/html/2607.08168v2#S3.SS3) · [Harmonica · metrics §4.1](https://arxiv.org/html/2609.04640v1#S4.SS1)
+
+### 13. Evaluation: pitch, note boundaries and instrument attribution
 
 F1 balances precision and recall. Frame activity, onsets, offsets and instrument attribution test different things; their scores are not interchangeable.
 
@@ -346,7 +362,7 @@ A prediction with correct pitch and timing but the wrong instrument may match an
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017v4) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 13. The data bottleneck: synthetic supervision and real recordings
+### 14. The data bottleneck: synthetic supervision and real recordings
 
 Training needs audio aligned to individual notes. The expensive combination is realistic sound, complete labels and reliable timing.
 
@@ -354,7 +370,7 @@ Scale and acoustic realism are distinct dimensions. MuScriptor uses synthetic da
 
 [Slakh · 2019](https://arxiv.org/abs/1909.08494) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [MAESTRO · dataset paper](https://arxiv.org/abs/1810.12247)
 
-### 14. Harmonica: frame-level transcription across instruments
+### 15. Harmonica: frame-level transcription across instruments
 
 Longshen Ou, Héctor Martel, Joe Hennessy-Priest and Taemin Cho · BandLab. One model transcribes solos or isolated stems across pitched instruments, including polyphony. Outputs contain pitch and timing, without instrument labels.
 
@@ -364,7 +380,7 @@ Reviewed version: arXiv v1, 2026-09-04, marked submitted to ICASSP 2027, not con
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1)
 
-### 15. Harmonic convolution: fundamental or someone else’s overtone?
+### 16. Harmonic convolution: fundamental or someone else’s overtone?
 
 For a candidate frequency f, inspect multiples and submultiples. Shift frequency features, concatenate channels, and learn their aggregation with a 1×1 convolution. Repeat this operation at several network depths.
 
@@ -374,7 +390,7 @@ Multi-depth means harmonic aggregation at successive feature layers, not simply 
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1)
 
-### 16. Harmonica: accuracy, scale and evaluation scope
+### 17. Harmonica: accuracy, scale and evaluation scope
 
 The family ranges from the 26.3K-parameter nano to the 15.1M x-large. Distinguish development-set curves, individual test-set scores and inference speed on specified hardware.
 
@@ -384,7 +400,7 @@ The contribution concerns explicit harmonic priors and the accuracy–compute tr
 
 [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 17. MuScriptor: multi-instrument transcription of real music
+### 18. MuScriptor: multi-instrument transcription of real music
 
 Rouard, Krause et al. · Kyutai × Mirelo × IRCAM. A decoder-only Transformer paired with synthetic pretraining, real-audio fine-tuning and reinforcement post-training.
 
@@ -394,7 +410,7 @@ MuScriptor combines a decoder-only architecture with staged data and training st
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 18. Architecture: audio prefixes and autoregressive event decoding
+### 19. Architecture: audio prefixes and autoregressive event decoding
 
 Project a music spectrogram into vectors, combine it with optional instrument conditions, and let a decoder-only Transformer predict musical events.
 
@@ -404,7 +420,7 @@ MT3 uses an encoder–decoder, whereas MuScriptor supplies projected audio as a 
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Tokenizer · pinned source](https://github.com/muscriptor/muscriptor/blob/7f213afecf23bd6a1b8672aa223690ee9807cefb/muscriptor/tokenizer/notes.py)
 
-### 19. Three-stage training: synthetic pretraining, real adaptation and refinement
+### 20. Three-stage training: synthetic pretraining, real adaptation and refinement
 
 Start with many precise labels, adapt to real mixtures, then refine predictions with a small, manually checked set. Scale and label quality play different roles.
 
@@ -414,7 +430,7 @@ Synthetic data supplies large-scale precise labels, real data addresses the doma
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 20. Original ablation: when does synthetic pretraining help most?
+### 21. Original ablation: when does synthetic pretraining help most?
 
 Figure 4 varies the fraction of real training data and compares models with and without synthetic pretraining. It directly examines the role of synthetic data when real labels are scarce.
 
@@ -424,7 +440,7 @@ Identify the two variables: real-data fraction and synthetic pretraining. Compar
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 21. Instrument conditioning and cross-chunk consistency
+### 22. Instrument conditioning and cross-chunk consistency
 
 Instrument conditions help stabilize identities across chunks and request selected parts. Providing the reference instrument list during evaluation differs from fully blind transcription.
 
@@ -434,7 +450,7 @@ A known instrument set narrows the inference space. Default paper results use re
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 22. Results: training stages and cross-dataset performance
+### 23. Results: training stages and cross-dataset performance
 
 Compare training stages within the same paper table. The evidence supports the training recipe, but does not fully isolate data, scale and architecture.
 
@@ -444,7 +460,7 @@ Real fine-tuning produces the largest stage gain in the main table, and RL post-
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 23. Original example: how training stages change note errors
+### 24. Original example: how training stages change note errors
 
 Figure 1 compares YourMT3+ with successive MuScriptor training stages on one guitar excerpt. The locations of missed and false notes connect aggregate metrics to concrete transcription errors.
 
@@ -454,7 +470,7 @@ This author-selected qualitative example helps examine false sustained notes, mi
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 24. Limitations: representation, evaluation and reproducibility
+### 25. Limitations: representation, evaluation and reproducibility
 
 A more useful model does not mean the task is solved. Evaluation choices, representational limits and reproducibility still shape the interpretation.
 
@@ -464,7 +480,7 @@ Overlapping notes with the same instrument and pitch expose limits of the event 
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Official repository · license / exports](https://github.com/muscriptor/muscriptor)
 
-### 25. Current research directions
+### 26. Current research directions
 
 Recent work does not converge on a single universal model. Pretrained representations, efficient inference and direct notation address different questions.
 
@@ -472,7 +488,7 @@ These papers form a selective research snapshot as of 2026-10-13, rather than an
 
 [AMT Challenge · 2026](https://arxiv.org/abs/2603.27528) · [Harmonica · 2026](https://arxiv.org/abs/2609.04640v1) · [TUTTI · 2026](https://arxiv.org/abs/2609.00640)
 
-### 26. Open research questions
+### 27. Open research questions
 
 Multi-instrument transcription must get pitch, time and instrument identity right together. MuScriptor highlights the power of data and post-training—and the importance of evaluation and representation.
 

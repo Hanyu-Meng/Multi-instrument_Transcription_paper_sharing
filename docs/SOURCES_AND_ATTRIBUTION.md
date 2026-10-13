@@ -2,6 +2,13 @@
 
 Research snapshot: **2026-10-13**. This educational website uses primary papers and official project sources. Results are author-reported, not independently reproduced. The interpretation of limitations is review commentary, not an author claim unless explicitly attributed.
 
+## Metrics slide
+
+- [MuScriptor §3.3](https://arxiv.org/html/2607.08168v2#S3.SS3) defines Onset, Offset, Frame, Drums and Multi F1. [Harmonica §4.1](https://arxiv.org/html/2609.04640v1#S4.SS1) defines OnP, OnPOff and Frm. Onset/OnP matches pitch and onset within a 50 ms tolerance; Offset/OnPOff additionally checks offsets within max(50 ms, 20% of the reference-note duration). Multi additionally requires instrument identity, with onset evaluation for drums.
+- Frame F1 / Frm share a time–pitch activity interpretation but use different grids: **62.5 ms for MuScriptor, 25 ms for Harmonica**. Metric-name correspondence does not establish a matched cross-paper comparison. The slide makes no claim about pooled versus per-recording aggregation in the papers.
+- The note-count example is an original teaching illustration, not model output: five references, four predictions and three one-to-one matches give TP=3, FP=1, FN=2, precision=0.75, recall=0.60 and F1=2/3. Its formulas explain note-level counting; frame metrics instead count active time–pitch cells.
+- MuScriptor's RL reward is the sum of the instrument-agnostic Onset, Frame and Offset F1 terms ([§3.4](https://arxiv.org/html/2607.08168v2#S3.SS4)). It does not directly optimize Multi F1. Harmonica reports OnPOff in its ablations and full-results appendix, in addition to the OnP/Frm columns in its main comparison.
+
 ## Harmonica version, task and result provenance
 
 - Longshen Ou, Héctor Martel, Joe Hennessy-Priest, Taemin Cho. *Harmonica: Accurate and Lightweight Instrument-Agnostic Music Transcription*. [arXiv:2609.04640v1](https://arxiv.org/abs/2609.04640v1), submitted 2026-09-04; the arXiv comments state “Submitted to ICASSP 2027.” This is not evidence of acceptance. [Full text](https://arxiv.org/html/2609.04640v1) · [author demo](https://www.oulongshen.xyz/amt).

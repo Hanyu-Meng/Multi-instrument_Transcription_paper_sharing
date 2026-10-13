@@ -11,6 +11,7 @@ A bilingual literature review of multi-instrument automatic music transcription,
 - 右上角可切换 **中文 / English**；正文、原创图示、补充说明与文献解读同步切换；论文原图保留原文标注。
 - **演示模式**支持逐页浏览；**← / →** 或 **PageUp / PageDown** 翻页，**Home / End** 跳到首尾，**Esc** 返回阅读。
 - **补充说明 / Notes**提供方法细节、评测条件与阅读提示。
+- **[评测指标专页 / Metrics slide](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=zh&mode=present#metrics)**：Precision、Recall、F1 计算示例，Frame / Onset / Offset / Multi / Drums 的匹配条件，以及 Harmonica 的 Frm / OnP / OnPOff 名称对照。**[English](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=en&mode=present#metrics)**。
 - 模型章节配有论文原图与逐步解读；点击图片可放大，并可直接打开对应的 arXiv 图、方法章节或 PDF 页。
 - 文献库支持中英文关键词搜索、类别筛选，以及逐篇展开“贡献与局限”。
 - 交互式音频示例可开关三个合成声部，用于展示混音中的声部重叠；它不运行转录模型，也不是模型效果对比。

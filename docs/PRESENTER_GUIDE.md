@@ -1,294 +1,288 @@
-# Presenter guide / 分享讲稿
+# 阅读补充说明 / Reading notes
 
 Generated from `site/assets/content.js`. Run `node scripts/export-guide.mjs` after editing.
 
-38 minutes of guided content + 2 minutes of open discussion. MuScriptor receives 14 minutes.
+多乐器音乐转录：方法、文献与研究挑战。
+
+Multi-instrument music transcription: methods, literature and research challenges.
 
 ## 中文版
 
-### 01. 听见音乐， 也听见每一个声部。 · 0–1 min
+### 01. 多乐器音乐转录
 
-多乐器自动音乐转录文献导读：从“谁在演奏什么”讲起，沿着经典方法走到 MuScriptor。一次面向理解、讨论与听觉直觉的 paper sharing。
+多乐器自动音乐转录的任务定义、建模方法与代表性文献。围绕音符表示、数据与评测梳理研究挑战，并重点分析 MuScriptor 的架构、训练策略和实验结果。
 
-开场只问一个问题：如果给你一段乐队录音，你能写出每个乐器的音符吗？说明这不是“识别歌曲”，也不是“生成一首新歌”。今天先建立共同语言，再把约14分钟留给 MuScriptor。
+多乐器音乐转录需要从混合音频恢复带有乐器标签的音符事件。本文从任务定义、代表性方法、数据与评测切入，重点分析 MuScriptor，并区分论文证据、概念示意与尚未解决的问题。
 
-### 02. 不是听出歌名，而是恢复演奏事件。 · 1–3 min
+### 02. 任务定义：从音频恢复音符事件
 
 核心问题只有四个：谁、弹了什么音、何时开始、何时结束。多乐器意味着还要把音符分配给正确的乐器类别。
 
-沿着图指向一个长条：横向位置是起音，长度是时值，纵向位置是音高，颜色是乐器。力度、踏板与弯音可能也是目标，但不是所有模型都预测。两个同类乐器的演奏者，也不一定被分成两条轨。
+钢琴卷帘图中，横向位置表示起音，长度表示时值，纵向位置表示音高，颜色表示乐器。力度、踏板与弯音也是潜在目标，但并非所有模型都预测。两个同类乐器的演奏者不一定被分成两条轨。
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 03. 试着在混音里，跟住一条旋律。 · 3–4 min
+### 03. 混合音频与声部感知
 
 勾选声部，播放一个 4 秒的合成小例子。先听全部，再只听一个声部：人也会借助音色、音域和旋律连续性来“分组”。
 
-全部声部播放一次，单独勾选长笛再播放一次。不要花太久调选项；这里只是让观众意识到“混在一起”的困难。真实音乐还多了混响、失真与复杂演奏。
+混合声部与单独声部的对照说明了音色、音域和旋律连续性如何影响听觉分组。这里的振荡器音色仅作近似；真实音乐还包含混响、失真与复杂演奏，因此这个例子不代表真实转录的完整难度。
 
-### 04. 一个频谱峰，可能不止一种解释。 · 4–7 min
+### 04. 谐波重叠与乐器归属的歧义
 
 频率高，不代表一定有一个更高的音符。它可能只是低音的泛音。两种乐器同时演奏，还会让这些线索互相遮挡。
 
-把 C3、C4 看作一个音高相差八度的例子。图的峰高只是示意，不能据此推断真实乐器。然后问：如果同一个音由两个人同时演奏，单靠音高集合能表达吗？为后面的表示上限埋伏笔。
+C3 与 C4 相差八度：C3 的第二谐波与 C4 的基频重合。图中峰高为示意，不能据此推断真实乐器。若两个演奏者同时发出相同音高，仅用音高集合无法区分两个音符实例；这一问题也涉及模型的事件表示能力。
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 05. 三种视角：分解、检测、写事件。 · 7–9 min
+### 05. 三类建模方法：分解、检测与事件解码
 
 这些是帮助理解的路线，不是一张从“落后”到“先进”的排名表。现代系统经常组合其中的思想。
 
-NMF像解释频谱的积木；逐帧模型像每时每刻做音高判断；序列模型像写一句由音乐事件组成的句子。没有必要在这里讲优化公式或注意力矩阵。
+NMF 用频谱模板及其激活解释混合信号；逐帧模型估计各时刻的音符活动；序列模型预测由时间、音高、乐器等符号构成的事件序列。输出表示决定模型能表达什么，网络结构与训练目标决定如何估计这些表示。
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [MT3 · 2022](https://arxiv.org/abs/2111.03017)
 
-### 06. 早期工作留下了什么？ · 9–12 min
+### 06. 基础工作：分解、起音建模与配对数据
 
-只记住三个关键思想：可解释的分解、起音与延音分开建模、可扩展的配对数据。
+三类基础贡献：可解释的分解、起音与延音分开建模，以及可扩展的配对数据。
 
-每个节点只用一分钟。特别强调 Onsets and Frames 的范围是钢琴，Slakh 是数据集，避免观众误以为都是同一赛道的逐代模型。
+NMF 提供可解释的分解框架；Onsets and Frames 将起音与持续状态分开建模，但范围是钢琴；Slakh 提供可扩展的多乐器配对数据。这三项工作的贡献类型与任务范围不同，不构成同一基准上的连续模型排名。
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [Slakh · 2019](https://arxiv.org/abs/1909.08494)
 
-### 07. MT3：把转录写成一串“音乐词”。 · 12–15 min
+### 07. MT3：统一事件表示与多任务转录
 
 同一个 Transformer，用共享事件词表处理不同数据集与乐器。混合音频直接映射为多轨事件序列。
 
-把事件序列读成一句话即可。自回归意味着前面写出的事件会影响后面的预测，而不是“把音频变成自然语言”。用最后30秒提出：如果编码器更懂音乐、标签利用更充分，会怎样？
+自回归解码使用此前生成的事件作为后续预测的条件。MT3 的输出是音乐事件符号，并非自然语言。共享词表有利于联合训练，但音频表征、标签覆盖和跨片段衔接仍会影响整体表现。
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017)
 
-### 08. 两条改进路线：任务协作，数据协作。 · 15–18 min
+### 08. 联合任务建模与跨数据集监督
 
 除了加大模型，还可以让相关任务互相帮助，或让训练更接近“真实音乐里许多声音同时出现”。
 
-左边强调信息流：识别条件→转录→帮助分离，混音本身也进入各模块。右边用“录音里有人唱，但只标了钢琴”的例子解释损失屏蔽。PerceiverTF 作为2023年的编码器基础一句带过。
+Jointist 的信息流包括乐器识别条件、音符转录与由 piano roll 引导的分离，混音也进入相关模块。YourMT3+ 中，若录音含人声而标签只覆盖钢琴，则未标注人声不应被当作负例。PerceiverTF 是其编码器设计的重要基础。
 
 [Jointist · 2023](https://arxiv.org/abs/2302.00286) · [Perceiver TF · 2023](https://arxiv.org/abs/2306.10785) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 09. “音高对了”还不够：你在算哪种 F1？ · 18–20 min
+### 09. 评测指标：音高、起止时间与乐器归属
 
 F1 综合精确率与召回率。帧级、起音、起止时间、乐器归属检查的是不同问题，不能把它们混在同一排行榜里。
 
-切换一个例子即可。乐器认错但音高和时间正确，在不区分乐器的指标里仍可匹配，在Multi里不匹配。不要说F1=正确音符占比，也不要把示意动画当成真实模型结果。
+音高与时间正确但乐器错误的预测，可以在不区分乐器的指标中匹配，却不能在 Multi F1 中匹配。F1 是精确率与召回率的调和平均，并非简单的正确音符占比。交互动画为构造示例，不是模型实验结果。
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 10. 合成数据很干净；真实音乐很复杂。 · 20–22 min
+### 10. 数据瓶颈：合成监督与真实录音
 
 要训练转录，音频与每个音符必须对齐。真正昂贵的是同时拥有真实的声音、完整的标签与可靠的时间。
 
-讲清“合成规模”与“真实分布”是两个维度。MuScriptor 不否定合成数据，而是研究它在哪个训练阶段最有价值。MAESTRO只是对齐精度的例子，不作为多乐器基准。
+数据规模与声学真实性是不同维度。MuScriptor 利用合成数据建立基础，再通过真实录音缩小分布差异。MAESTRO 说明精确音频—MIDI 对齐的价值，但其钢琴范围不能替代多乐器混音评测。
 
 [Slakh · 2019](https://arxiv.org/abs/1909.08494) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [MAESTRO · dataset paper](https://arxiv.org/abs/1810.12247)
 
-### 11. MuScriptor：把重点放在真实音乐上。 · 22–23 min
+### 11. MuScriptor：面向真实音乐的多乐器转录
 
 Rouard、Krause 等 · Kyutai × Mirelo × IRCAM。核心是仅解码器 Transformer，以及“合成预训练 → 真实微调 → 强化学习后训练”的完整路线。
 
-先给一句话总结：关键贡献主要是如何让训练走向真实音乐，而不只是设计一个花哨模块。接下来依次讲输入输出、训练、条件控制、结果和局限。
+MuScriptor 的核心是仅解码器架构与分阶段数据、训练策略的结合。理解其贡献需要同时考察输入输出表示、训练语料、乐器条件、实验协议与表示边界，不能仅依据某个网络模块或单一分数判断。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 12. 音频作为前缀，音符作为续写。 · 23–26 min
+### 12. 模型架构：音频前缀与自回归事件解码
 
 把一段音乐的频谱投影为向量，与可选的乐器条件一起送入仅解码器 Transformer，然后逐个预测音乐事件。
 
-和MT3对照：MT3有编码器和解码器，MuScriptor把投影后的音频当作前缀放入仅解码器模型。不要画成先做音源分离，也不要称为“自然语言LLM”。5秒约500帧，实际张量长度可能受填充影响。
+MT3 使用编码器—解码器结构；MuScriptor 将投影后的音频作为仅解码器模型的前缀。该流程不要求先进行音源分离，也不是自然语言生成。5 秒约对应 500 帧，实际张量长度可能受填充影响。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Tokenizer · pinned source](https://github.com/muscriptor/muscriptor/blob/7f213afecf23bd6a1b8672aa223690ee9807cefb/muscriptor/tokenizer/notes.py)
 
-### 13. 三阶段训练，各自补上一块短板。 · 26–29 min
+### 13. 三阶段训练：合成预训练、真实微调与后训练
 
 模型先拥有大量精确标签，再接触真实混音，最后用少量人工核验数据优化预测质量。规模与标注质量在不同阶段发挥作用。
 
-大数据学基础，真实数据补域差，高质量数据做后训练。用“同一题写8份答案，按参考答案评分”解释组相对奖励。若被问RL为何有效：论文结果支持收益，但不能单凭主表排除高质量子集本身的贡献。
+合成数据提供大规模精确标签，真实数据缩小域差异，人工核验数据用于后训练。组相对奖励比较同一片段的 8 个候选与参考标注。主表支持后训练带来的收益，但不能单独区分优化算法与高质量数据子集的贡献。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 14. 告诉它“有哪些乐器”，会改变问题。 · 29–31 min
+### 14. 乐器条件与跨片段一致性
 
 乐器条件可以让跨片段的身份更稳定，也能只请求一部分声部。但评测时给出真实乐器列表，与完全盲转录不是同一种设定。
 
-举例：如果事先知道是钢琴三重奏，搜索空间明显缩小。论文默认结果使用来自参考标注的乐器集合。解释CFG=1代表不做引导放大；最终RL模型不需要CFG=2的额外前向计算来获得主表最佳Multi分数。
+已知乐器集合会缩小推断空间。论文默认结果使用参考标注中的乐器集合，因此与盲转录设定不同。CFG=1 表示不进行引导放大；最终 RL 模型无需 CFG=2 的额外前向计算即可获得主表最佳 Multi F1。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 15. 最大的跃升，来自接触真实音乐。 · 31–34 min
+### 15. 实验结果：训练阶段与跨数据集表现
 
 下面只比较同一张论文表中的训练阶段。它支持这条训练路线的价值，但没有把数据、规模与架构的贡献完全拆开。
 
-用1分钟读三根柱子，1分钟解释条件，最后1分钟讲反例。额外细节：1%真实数据时合成预训练使Offset F1从9.9到33.4；全量时41.0到42.3（CFG=2，无RL，图4）。这说明合成预训练在真实标签稀缺时特别重要，不能说它没用。
+主表中，真实微调对应最大的阶段增益，RL 后训练进一步提高 Multi F1。图4还显示：在1%真实数据下，合成预训练使 Offset F1 从9.9提高到33.4；全量时从41.0提高到42.3（CFG=2，无RL）。合成预训练在真实标签稀缺时尤其重要。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 16. 进步值得肯定，边界也需要看见。 · 34–36 min
+### 16. 局限：表示能力、评测设定与可复现性
 
 把模型变得更有用，不等于问题已经解决。评测协议、表示能力和可复现性，仍然影响我们如何解读结果。
 
-重点讲第一个限制，它把开头的“两个声音同音高”问题收回来。再提醒：论文1.3B与当前软件large 1.4B的命名不同；软件新增乐谱导出不等于论文直接建模乐谱。现场有余裕才打开音频链接。
+同乐器、同音高的重叠音符暴露了事件表示的上限，并影响评测结果。论文的1.3B与当前软件 large 的1.4B命名需要区分；软件提供乐谱导出，也不等于论文中的模型直接预测乐谱结构。官方音频案例可用于补充定量结果。
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Official repository · license / exports](https://github.com/muscriptor/muscriptor)
 
-### 17. 到2026年，研究还在往哪里走？ · 36–37 min
+### 17. 当前研究方向
 
 最新方向没有收敛到一个“万能模型”。预训练表征、推理效率和直接记谱，分别回答不同问题。
 
-这页只讲研究方向，每篇一句。日期为2026-10-13的检索快照，非穷尽式综述；这些相邻任务不是同一个排行榜。细节留在文献库。
+这些文献构成截至2026-10-13的选择性研究概览，而非穷尽式综述。预训练表征、不区分乐器的高效转录和直接记谱具有不同目标与评测协议，不应合并成单一排行榜。
 
 [AMT Challenge · 2026](https://arxiv.org/abs/2603.27528) · [Harmonica · 2026](https://arxiv.org/abs/2609.04640) · [TUTTI · 2026](https://arxiv.org/abs/2609.00640)
 
-### 18. 三个问题，带走这次分享。 · 37–38 min
+### 18. 开放研究问题
 
 多乐器转录的核心，是让音高、时间与乐器身份同时可信。MuScriptor展示了数据与后训练的力量，也让评测和表示边界更值得讨论。
 
-到这里讲解约38分钟，留2分钟让观众选一个问题讨论。如果超时，前瞻页只用一句话带过，不压缩MuScriptor的评测边界。
-
-### 自由讨论 · 38–40 min
-
-从最后一页挑一个问题讨论。若时间紧，精简前沿页，不省略结果的评测条件。
+后续研究需要同时关注数据覆盖与标注质量、面向下游使用的评测，以及同类乐器多声部的表示。对 MuScriptor 的进一步分析可以围绕等量高质量数据的监督微调对照、无参考乐器条件评测和冲突音符保留设定展开。
 
 ## English
 
-### 01. Hear the music. Find every part. · 0–1 min
+### 01. Multi-instrument Music Transcription
 
-An illustrated literature review of multi-instrument automatic music transcription—from “who played what?” to MuScriptor. Built for listening, understanding and discussion.
+A review of task definitions, modeling approaches and representative literature in multi-instrument automatic music transcription. Note representations, data and evaluation frame the research challenges, with a detailed analysis of MuScriptor’s architecture, training strategy and empirical results.
 
-Open with one question: could you write out each instrument’s notes from a band recording? This is neither song identification nor music generation. Establish the task first; reserve about 14 minutes for MuScriptor.
+Multi-instrument music transcription recovers instrument-labelled note events from mixed audio. This review examines the task, representative methods, data and evaluation, then analyzes MuScriptor while distinguishing empirical evidence, conceptual illustrations and open questions.
 
-### 02. Recover the performance, one note at a time. · 1–3 min
+### 02. Task definition: from audio to note events
 
 Four questions: which instrument, which pitch, when did it start, and when did it end? Multi-instrument transcription also assigns each note to an instrument class.
 
-Point to one note bar: horizontal position is onset, length is duration, height is pitch and color is instrument. Velocity, pedal and bends are optional targets. Two players of the same instrument are not necessarily separated.
+In a piano roll, horizontal position denotes onset, length denotes duration, height denotes pitch and color denotes instrument. Velocity, pedal and bends are possible targets but are not predicted by every model. Two players of the same instrument are not necessarily assigned separate tracks.
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 03. Try following one part inside the mixture. · 3–4 min
+### 03. Auditory perception of mixed parts
 
 Select parts and play a four-second synthetic example. Listen to the mixture, then one part: we use timbre, register and melodic continuity to group notes.
 
-Play the mixture once, then isolate the flute-like part. Keep this short. The example introduces overlap; real recordings add effects, distortion and richer playing techniques.
+Comparing mixed and isolated parts illustrates how timbre, register and melodic continuity influence auditory grouping. Oscillator timbres are approximate. Real music also contains reverberation, distortion and complex playing techniques, so the example does not capture the full transcription problem.
 
-### 04. One spectral peak can have several explanations. · 4–7 min
+### 04. Harmonic overlap and instrument ambiguity
 
 A high-frequency peak need not mean a higher note: it may be an overtone of a lower note. Simultaneous instruments overlap and obscure these cues.
 
-Use C3 and C4 as an octave example. Peak heights are schematic, not measured. Ask whether a set of pitches can represent two people playing the same note simultaneously. Return to this in the representation-limit discussion.
+C3 and C4 are an octave apart: the second harmonic of C3 overlaps the fundamental of C4. Peak heights are schematic and do not identify real instruments. When two performers play the same pitch simultaneously, a pitch set cannot distinguish two note instances, exposing a representation issue as well as an acoustic one.
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 05. Three views: factorize, detect, write events. · 7–9 min
+### 05. Three approaches: factorization, detection and event decoding
 
 These are conceptual routes, not a ranking from obsolete to superior. Modern systems often combine ideas from several of them.
 
-NMF explains a spectrum with building blocks; frame models classify activity over time; sequence models write a sentence made of musical events. Leave optimization and attention details aside here.
+NMF explains a mixture through spectral templates and their activations; frame models estimate note activity over time; sequence models predict events encoding time, pitch and instrument. Output representations determine what a model can express, while architecture and training objectives determine how those representations are estimated.
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [MT3 · 2022](https://arxiv.org/abs/2111.03017)
 
-### 06. What did the early milestones teach us? · 9–12 min
+### 06. Foundations: factorization, onset modeling and paired data
 
-Keep three ideas: interpretable factorization, separate attack and sustain modeling, and scalable paired data.
+Three foundational contributions: interpretable factorization, separate attack and sustain modeling, and scalable paired data.
 
-Spend one minute per milestone. Explicitly mark Onsets and Frames as piano-only and Slakh as a dataset; these are not successive models in one identical benchmark.
+NMF provides an interpretable factorization framework. Onsets and Frames separates onset and sustained activity modeling within piano transcription. Slakh supplies scalable paired multi-instrument data. These contributions differ in type and scope and are not successive entries in one benchmark ranking.
 
 [NMF · 2003](https://www.merl.com/publications/TR2003-139) · [Onsets & Frames · 2018](https://arxiv.org/abs/1710.11153) · [Slakh · 2019](https://arxiv.org/abs/1909.08494)
 
-### 07. MT3: write transcription as musical tokens. · 12–15 min
+### 07. MT3: shared event representations for multitask transcription
 
 One Transformer uses a shared event vocabulary across datasets and instruments, mapping a mixture directly to a multitrack event sequence.
 
-Read the events aloud as a sentence. Autoregressive means earlier events condition later ones, not that audio is translated into natural language. Transition by asking what stronger audio representations and better use of labels could add.
+Autoregressive decoding conditions each prediction on preceding events. MT3 outputs symbolic musical events rather than natural language. A shared vocabulary supports joint training, while audio representations, label coverage and chunk continuity still affect overall performance.
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017)
 
-### 08. Two routes forward: joint tasks and better data use. · 15–18 min
+### 08. Joint task modeling and cross-dataset supervision
 
 Progress can come from connecting related tasks or making training better reflect the many simultaneous sounds in real music.
 
-On the left, explain recognition → conditioned transcription → separation support, with mixture audio feeding the modules too. On the right, imagine vocals audible in a recording labelled only for piano. Mention Perceiver TF (2023) briefly as an encoder foundation.
+Jointist connects instrument recognition, conditioned transcription and piano-roll-guided separation, with mixture audio also feeding relevant modules. In YourMT3+, vocals audible in a piano-labelled recording should not be treated as negative examples solely because they are unannotated. PerceiverTF is a foundation for its encoder design.
 
 [Jointist · 2023](https://arxiv.org/abs/2302.00286) · [Perceiver TF · 2023](https://arxiv.org/abs/2306.10785) · [YourMT3+ · 2024](https://arxiv.org/abs/2407.04822v3)
 
-### 09. Correct pitch is only one part of the score. · 18–20 min
+### 09. Evaluation: pitch, note boundaries and instrument attribution
 
 F1 balances precision and recall. Frame activity, onsets, offsets and instrument attribution test different things; their scores are not interchangeable.
 
-Use one toggle: correct pitch and timing with the wrong instrument can match an instrument-agnostic metric but fails Multi F1. F1 is not simply the proportion of correct notes. The animation is a constructed example.
+A prediction with correct pitch and timing but the wrong instrument may match an instrument-agnostic metric while failing Multi F1. F1 is the harmonic mean of precision and recall, not simply the fraction of correct notes. The interactive animation is a constructed example, not a model result.
 
 [MT3 · 2022](https://arxiv.org/abs/2111.03017) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 10. Synthetic labels are clean. Real music is messy. · 20–22 min
+### 10. The data bottleneck: synthetic supervision and real recordings
 
 Training needs audio aligned to individual notes. The expensive combination is realistic sound, complete labels and reliable timing.
 
-Separate scale from realism. MuScriptor does not reject synthetic data; it asks at which training stage it helps most. MAESTRO illustrates precise alignment, not a multi-instrument benchmark.
+Scale and acoustic realism are distinct dimensions. MuScriptor uses synthetic data as a foundation and real recordings to address distribution differences. MAESTRO illustrates the value of precise audio–MIDI alignment, but its piano scope does not replace evaluation on multi-instrument mixtures.
 
 [Slakh · 2019](https://arxiv.org/abs/1909.08494) · [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [MAESTRO · dataset paper](https://arxiv.org/abs/1810.12247)
 
-### 11. MuScriptor: focus on real-world music. · 22–23 min
+### 11. MuScriptor: multi-instrument transcription of real music
 
 Rouard, Krause et al. · Kyutai × Mirelo × IRCAM. A decoder-only Transformer paired with synthetic pretraining, real-audio fine-tuning and reinforcement post-training.
 
-Give the one-sentence thesis: the contribution centers on transferring training to real music, beyond designing a novel module. Next: inputs and outputs, training, control, evidence and limits.
+MuScriptor combines a decoder-only architecture with staged data and training strategies. Its contribution is assessed through input and output representations, training corpora, instrument conditions, experimental protocols and representational limits, rather than a single module or score.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 12. Audio is the prefix. Notes are the continuation. · 23–26 min
+### 12. Architecture: audio prefixes and autoregressive event decoding
 
 Project a music spectrogram into vectors, combine it with optional instrument conditions, and let a decoder-only Transformer predict musical events.
 
-Contrast MT3’s encoder–decoder with MuScriptor’s projected audio prefix in a decoder-only model. This is not a separation pipeline or a prose language model. Five seconds is roughly 500 frames; padding can affect exact tensor length.
+MT3 uses an encoder–decoder, whereas MuScriptor supplies projected audio as a prefix to a decoder-only model. The pipeline does not require source separation and does not generate natural language. Five seconds corresponds to roughly 500 frames; padding can affect the exact tensor length.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Tokenizer · pinned source](https://github.com/muscriptor/muscriptor/blob/7f213afecf23bd6a1b8672aa223690ee9807cefb/muscriptor/tokenizer/notes.py)
 
-### 13. Three stages, three different jobs. · 26–29 min
+### 13. Three-stage training: synthetic pretraining, real adaptation and refinement
 
 Start with many precise labels, adapt to real mixtures, then refine predictions with a small, manually checked set. Scale and label quality play different roles.
 
-Large data teaches basics; real data addresses the domain gap; checked data supports refinement. Explain group-relative reward as eight answers to one question, scored against a reference. Results support a gain, but the main table alone does not isolate the optimization effect from the high-quality subset.
+Synthetic data supplies large-scale precise labels, real data addresses the domain gap, and checked data supports post-training. Group-relative rewards compare eight candidates for the same clip against reference annotations. The main table supports a post-training gain but does not isolate the optimization algorithm from the contribution of the high-quality subset.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 14. Telling the model which instruments exist changes the task. · 29–31 min
+### 14. Instrument conditioning and cross-chunk consistency
 
 Instrument conditions help stabilize identities across chunks and request selected parts. Providing the reference instrument list during evaluation differs from fully blind transcription.
 
-If you already know the ensemble, the search space shrinks. Default paper results use reference-derived instrument sets. CFG=1 means no guidance amplification; the final RL model does not need CFG=2’s extra forward computation for its best reported Multi F1.
+A known instrument set narrows the inference space. Default paper results use reference-derived instrument sets and therefore differ from blind transcription. CFG=1 means no guidance amplification; the final RL model obtains its best reported Multi F1 without the additional forward computation required by CFG=2.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 15. The largest jump comes from learning real music. · 31–34 min
+### 15. Results: training stages and cross-dataset performance
 
 Compare training stages within the same paper table. The evidence supports the training recipe, but does not fully isolate data, scale and architecture.
 
-Spend a minute on the bars, a minute on conditions, a minute on counterexamples. Optional nuance: synthetic pretraining raises Offset F1 from 9.9 to 33.4 at 1% real data, versus 41.0 to 42.3 at full scale (Figure 4, CFG=2, no RL). It matters especially when real labels are scarce.
+Real fine-tuning produces the largest stage gain in the main table, and RL post-training further improves Multi F1. Figure 4 shows synthetic pretraining raising Offset F1 from 9.9 to 33.4 at 1% real data and from 41.0 to 42.3 at full scale (CFG=2, no RL). Synthetic pretraining is especially valuable when real labels are scarce.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2)
 
-### 16. Recognize the progress. Examine the limits. · 34–36 min
+### 16. Limitations: representation, evaluation and reproducibility
 
 A more useful model does not mean the task is solved. Evaluation choices, representational limits and reproducibility still shape the interpretation.
 
-Emphasize the first limitation, returning to the opening question about overlapping pitches. Distinguish the paper’s 1.3B label from current software’s 1.4B, and score-export engineering from the paper’s note model. Open external audio only if time permits.
+Overlapping notes with the same instrument and pitch expose limits of the event representation and affect evaluation. The paper’s 1.3B label differs from the current software’s 1.4B large label. Software score export does not imply that the paper’s model directly predicts notation structure. Official audio examples complement the quantitative results.
 
 [MuScriptor · v2 / 2026](https://arxiv.org/html/2607.08168v2) · [Official repository · license / exports](https://github.com/muscriptor/muscriptor)
 
-### 17. Where is the field heading in 2026? · 36–37 min
+### 17. Current research directions
 
 Recent work does not converge on a single universal model. Pretrained representations, efficient inference and direct notation address different questions.
 
-One sentence per direction. This is a curated snapshot checked on 2026-10-13, not an exhaustive survey. The adjacent tasks do not share a single leaderboard; details stay in the library.
+These papers form a selective research snapshot as of 2026-10-13, rather than an exhaustive survey. Pretrained representations, efficient instrument-agnostic transcription and direct notation have different objectives and evaluation protocols and should not be merged into a single ranking.
 
 [AMT Challenge · 2026](https://arxiv.org/abs/2603.27528) · [Harmonica · 2026](https://arxiv.org/abs/2609.04640) · [TUTTI · 2026](https://arxiv.org/abs/2609.00640)
 
-### 18. Three questions to carry into the discussion. · 37–38 min
+### 18. Open research questions
 
 Multi-instrument transcription must get pitch, time and instrument identity right together. MuScriptor highlights the power of data and post-training—and the importance of evaluation and representation.
 
-Aim to finish the guided material by minute 38 and leave two minutes for one audience question. If behind, compress the outlook page rather than skipping the caveats around MuScriptor’s evaluation.
-
-### Open discussion · 38–40 min
-
-Choose one question from the final page. If behind schedule, compress the outlook rather than omitting evaluation caveats.
+Further research must consider data coverage and label quality, evaluation for downstream use, and representations for multiple parts of the same instrument. Further analysis of MuScriptor could examine supervised fine-tuning with the same checked data, evaluation without reference instrument conditions, and protocols retaining conflicting notes.
 

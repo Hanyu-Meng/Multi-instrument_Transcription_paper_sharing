@@ -9,8 +9,7 @@ const sandbox={window:{}};vm.runInNewContext(source,sandbox);
 const both=['zh','en'].map(lang=>sandbox.window.buildContent(lang));
 for(const [i,data] of both.entries()){
  const lang=['zh','en'][i];
- assert.equal(data.slides.length,18,`${lang}: 18 teaching pages`);
- assert.equal(data.slides.reduce((sum,s)=>sum+s.minutes,0),38,`${lang}: 38-minute talk`);
+ assert.equal(data.slides.length,18,`${lang}: 18 review sections`);
  assert.equal(data.papers.length,12,`${lang}: bibliography size`);
  const ids=new Set(data.slides.map(s=>s.id));assert.equal(ids.size,data.slides.length,'Unique section IDs');
  for(const s of data.slides){
@@ -24,4 +23,4 @@ for(const [i,data] of both.entries()){
 }
 assert.deepEqual(Array.from(both[0].slides,s=>s.id),Array.from(both[1].slides,s=>s.id),'Bilingual section parity');
 assert.deepEqual(Array.from(both[0].papers,p=>p.id),Array.from(both[1].papers,p=>p.id),'Bilingual reference parity');
-console.log('Passed: bilingual content, 18 pages / 38 minutes, 12 references, citations and local assets.');
+console.log('Passed: bilingual content, 18 sections, 12 references, citations and local assets.');

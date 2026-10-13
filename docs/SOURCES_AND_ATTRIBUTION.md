@@ -48,7 +48,7 @@ This is an actual qualitative guitar-note example from the paper, not aggregate 
 - Web Audio example: original short synthetic notes using browser oscillators. Piano/bass/flute timbres are approximations. This is not model inference or a model-output comparison.
 - Stage bar chart: original redraw of MuScriptor Table 1, with protocol displayed beside it.
 
-The diagrams, layout and paraphrased bilingual teaching text were prepared for this paper-sharing activity. Original paper titles remain in English for precise identification.
+The diagrams, layout and paraphrased bilingual teaching text were prepared for this literature review. Original paper titles remain in English for precise identification.
 
 ## Other primary sources
 

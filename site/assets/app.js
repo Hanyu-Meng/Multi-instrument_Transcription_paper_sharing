@@ -10,18 +10,18 @@
   };
   const ui = {
     zh: {
-      title: '听见每一个声部 · 多乐器音乐转录', language: 'EN', languageLabel: 'Switch to English',
-      notes: '讲者笔记', present: '开始演示', reading: '返回阅读', chapters: '章节导航',
-      rail: '一段录音，多个声部。', railSub: '多乐器音乐转录 · 40 分钟文献导读',
-      railKicker: '聆听 · 解码 · 理解', brandSub: '双语论文分享导读', library: '文献资料库',
-      railStatus: '中英双语 · 40 分钟分享', skip: '跳到正文', sources: '出处', note: '讲者笔记',
-      minute: '分钟', previous: '上一页', next: '下一页', play: '开始', pause: '暂停', reset: '重置计时器',
-      fullscreen: '全屏', leaveFullscreen: '退出全屏', timer: '已用时间，建议总时长 40 分钟',
+      title: '多乐器音乐转录 · 文献综述', language: 'EN', languageLabel: 'Switch to English',
+      notes: '补充说明', present: '开始演示', reading: '返回阅读', chapters: '章节导航',
+      rail: '多乐器音乐转录', railSub: '方法、数据与评测 · 文献综述',
+      railKicker: '方法 · 证据 · 研究问题', brandSub: '多乐器音乐转录文献综述', library: '文献资料库',
+      railStatus: '文献与研究方法', skip: '跳到正文', sources: '出处', note: '补充说明',
+      previous: '上一页', next: '下一页',
+      fullscreen: '全屏', leaveFullscreen: '退出全屏',
       libraryLead: '按关键词与类别查找原始论文。展开每篇文献，查看贡献与阅读时应注意的限制。',
       search: '搜索标题、作者、方法或中英文关键词…', searchLabel: '搜索文献', kindLabel: '筛选文献类别',
       allKinds: '全部类别', count: (n, total) => `${n} / ${total} 篇文献`, empty: '没有匹配的文献。请尝试其他关键词或类别。',
-      paper: '论文', code: '代码', demo: '项目 / 演示', expand: '贡献与局限', insight: '值得记住', limit: '边界与局限',
-      footer: '为约 40 分钟的 paper sharing 设计。图示与合成音频用于解释概念；合成示例不是任何转录模型的输出。数值与结论应结合所链接原文的任务设置、数据划分和评价协议理解。',
+      paper: '论文', code: '代码', demo: '项目 / 演示', expand: '贡献与局限', insight: '主要贡献', limit: '边界与局限',
+      footer: '本综述梳理多乐器音乐转录的任务定义、代表性方法与研究挑战。图示与合成音频用于解释概念；合成示例不是任何转录模型的输出。数值与结论应结合所链接原文的任务设置、数据划分和评价协议理解。',
       keys: '演示快捷键：← / → 或 PageUp / PageDown；Home / End 跳转；Esc 返回阅读。',
       audioPlaying: '正在播放 4 秒合成示例；勾选声部可即时静音 / 恢复。',
       audioStopped: '播放已停止。', audioFinished: '合成示例播放完成。',
@@ -33,18 +33,18 @@
       instrumentAlt: '预测音符的乐器标签错误', offsetAlt: '预测音符结束时间过晚', missingAlt: '预测中缺少该音符'
     },
     en: {
-      title: 'Hear Every Part · Multi-instrument Music Transcription', language: '中文', languageLabel: '切换到中文',
-      notes: 'Speaker notes', present: 'Present', reading: 'Read', chapters: 'Chapter navigation',
-      rail: 'One recording. Many parts.', railSub: 'Multi-instrument transcription · a 40-minute field guide',
-      railKicker: 'LISTEN · DECODE · UNDERSTAND', brandSub: 'A BILINGUAL PAPER SHARING GUIDE', library: 'Paper library',
-      railStatus: 'Bilingual · 40-minute sharing', skip: 'Skip to content', sources: 'Sources', note: 'Speaker notes',
-      minute: 'min', previous: 'Previous slide', next: 'Next slide', play: 'Start', pause: 'Pause', reset: 'Reset timer',
-      fullscreen: 'Fullscreen', leaveFullscreen: 'Exit fullscreen', timer: 'Elapsed time; suggested total duration 40 minutes',
+      title: 'Multi-instrument Music Transcription · A Literature Review', language: '中文', languageLabel: '切换到中文',
+      notes: 'Notes', present: 'Present', reading: 'Read', chapters: 'Chapter navigation',
+      rail: 'Multi-instrument transcription', railSub: 'Methods, data and evaluation · a literature review',
+      railKicker: 'METHODS · EVIDENCE · OPEN QUESTIONS', brandSub: 'A LITERATURE REVIEW', library: 'Paper library',
+      railStatus: 'Literature & research methods', skip: 'Skip to content', sources: 'Sources', note: 'Additional notes',
+      previous: 'Previous slide', next: 'Next slide',
+      fullscreen: 'Fullscreen', leaveFullscreen: 'Exit fullscreen',
       libraryLead: 'Search the original papers by keyword and category. Expand each entry for its contribution and the limits to keep in mind.',
       search: 'Search titles, authors, methods, or English / Chinese keywords…', searchLabel: 'Search papers', kindLabel: 'Filter paper category',
       allKinds: 'All categories', count: (n, total) => `${n} / ${total} papers`, empty: 'No matching papers. Try another keyword or category.',
-      paper: 'Paper', code: 'Code', demo: 'Project / demo', expand: 'Contribution and limitations', insight: 'What to remember', limit: 'Boundaries and limitations',
-      footer: 'Designed for a paper sharing session of approximately 40 minutes. Diagrams and synthetic audio explain concepts; the audio illustration is not the output of a transcription model. Read quantitative claims alongside the linked papers’ task settings, data splits, and evaluation protocols.',
+      paper: 'Paper', code: 'Code', demo: 'Project / demo', expand: 'Contribution and limitations', insight: 'Main contribution', limit: 'Boundaries and limitations',
+      footer: 'A review of task definitions, representative methods and research challenges in multi-instrument music transcription. Diagrams and synthetic audio explain concepts; the audio illustration is not the output of a transcription model. Read quantitative claims alongside the linked papers’ task settings, data splits, and evaluation protocols.',
       keys: 'Presentation keys: ← / → or PageUp / PageDown; Home / End to jump; Esc to return to reading.',
       audioPlaying: 'Playing a 4-second synthetic illustration. Toggle parts to mute or restore them live.',
       audioStopped: 'Playback stopped.', audioFinished: 'Synthetic illustration finished.',
@@ -61,7 +61,7 @@
     lang: ['zh', 'en'].includes(params.get('lang')) ? params.get('lang') : storage.get('polyphony-lang') === 'en' ? 'en' : 'zh',
     mode: params.get('mode') === 'present' ? 'present' : 'read',
     notes: storage.get('polyphony-notes') === 'true', current: 'intro', query: '', kind: '', error: 'instrument',
-    data: null, paired: null, elapsed: 0, timerStartedAt: null, scrollLockUntil: 0
+    data: null, paired: null, scrollLockUntil: 0
   };
   const audio = { context: null, master: null, nodes: [], stems: {}, finish: null, generation: 0, playing: false };
   let scrollScheduled = false;
@@ -105,14 +105,11 @@
     $('#rail-status').textContent = tr().railStatus;
     $('#library-nav').textContent = `${tr().library} ↗`;
     $('#chapter-nav').setAttribute('aria-label', tr().chapters);
-    $('#chapter-nav').innerHTML = state.data.chapters.map((chapter, index) => `<a class="chapter-link" data-chapter="${escape(chapter.id)}" href="#${escape(chapterFirst(chapter))}"><span class="number">${String(index + 1).padStart(2, '0')}</span><span>${escape(chapter.label)}</span><small>${escape(chapter.range || '')}</small></a>`).join('');
-    let minute = 0;
+    $('#chapter-nav').innerHTML = state.data.chapters.map((chapter, index) => `<a class="chapter-link" data-chapter="${escape(chapter.id)}" href="#${escape(chapterFirst(chapter))}"><span class="number">${String(index + 1).padStart(2, '0')}</span><span>${escape(chapter.label)}</span></a>`).join('');
     $('#slides').innerHTML = state.data.slides.map((slide, index) => {
-      const start = minute;
-      minute += Number(slide.minutes) || 0;
       return `<section id="${escape(slide.id)}" class="slide${index === 0 ? ' hero' : ''}" aria-labelledby="heading-${escape(slide.id)}" data-chapter="${escape(slide.chapter)}">
         <div class="eyebrow"><span>${String(index + 1).padStart(2, '0')} / ${String(state.data.slides.length).padStart(2, '0')}</span><span>${escape(slide.kicker)}</span></div>
-        <div class="slide-heading"><${index === 0 ? 'h1' : 'h2'} id="heading-${escape(slide.id)}">${slide.title}</${index === 0 ? 'h1' : 'h2'}><span class="minute">${start}–${minute} ${escape(tr().minute)}</span></div>
+        <div class="slide-heading"><${index === 0 ? 'h1' : 'h2'} id="heading-${escape(slide.id)}">${slide.title}</${index === 0 ? 'h1' : 'h2'}></div>
         ${slide.lead ? `<p class="lead">${slide.lead}</p>` : ''}<div class="content">${slide.html || ''}</div>
         ${slide.sources?.length ? `<div class="sources"><span>${escape(tr().sources)}:</span>${slide.sources.map(source => externalLink(source.label, source.url)).join('<span aria-hidden="true">·</span>')}</div>` : ''}
         ${slide.note ? `<aside class="speaker-note"><strong>${escape(tr().note)}</strong><div>${slide.note}</div></aside>` : ''}
@@ -122,15 +119,12 @@
     $('#footer').innerHTML = `<p>${escape(tr().footer)}</p><p>${escape(tr().keys)}</p>`;
     $('#prev').setAttribute('aria-label', tr().previous);
     $('#next').setAttribute('aria-label', tr().next);
-    $('#timer-reset').setAttribute('aria-label', tr().reset);
-    $('#timer').setAttribute('aria-label', tr().timer);
     $('#presentation-bar').setAttribute('aria-label', tr().keys);
     $('#presentation-bar').setAttribute('role', 'toolbar');
     updateFullscreenLabel();
     updateError(state.error);
     audioStatus(tr().audioIdle);
     applyMode();
-    updateTimer();
   }
 
   function renderLibrary() {
@@ -199,7 +193,6 @@
   }
 
   function setMode(mode) {
-    if (mode === 'read') pauseTimer();
     state.mode = mode;
     applyMode();
     syncURL();
@@ -211,18 +204,6 @@
     goTo(ids[next]);
   }
 
-  function tickValue() { return state.elapsed + (state.timerStartedAt === null ? 0 : performance.now() - state.timerStartedAt); }
-  function updateTimer() {
-    const seconds = Math.floor(tickValue() / 1000);
-    const time = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
-    $('#timer').textContent = `${time} / 40:00`;
-    $('#timer').setAttribute('datetime', `PT${seconds}S`);
-    $('.timer').classList.toggle('over', seconds >= 2400);
-    $('#timer-toggle').textContent = state.timerStartedAt === null ? tr().play : tr().pause;
-    $('#timer-toggle').setAttribute('aria-pressed', String(state.timerStartedAt !== null));
-  }
-  function startTimer() { if (state.timerStartedAt === null) state.timerStartedAt = performance.now(); updateTimer(); }
-  function pauseTimer() { if (state.timerStartedAt !== null) { state.elapsed = tickValue(); state.timerStartedAt = null; } updateTimer(); }
   function updateFullscreenLabel() { $('#fullscreen').setAttribute('aria-label', document.fullscreenElement ? tr().leaveFullscreen : tr().fullscreen); }
 
   function updateError(kind) {
@@ -321,7 +302,7 @@
   document.addEventListener('click', event => {
     const element = event.target.closest('button, a');
     if (!element) return;
-    if (element.matches('[data-start]')) { event.preventDefault(); setMode('present'); startTimer(); return; }
+    if (element.matches('[data-start]')) { event.preventDefault(); setMode('present'); return; }
     if (element.matches('[data-next]')) { event.preventDefault(); move(1); return; }
     if (element.matches('[data-error]')) { updateError(element.dataset.error); return; }
     if (element.matches('[data-audio="play"]')) { void playAudio(); return; }
@@ -351,8 +332,6 @@
   $('#mode-toggle').addEventListener('click', () => setMode(state.mode === 'present' ? 'read' : 'present'));
   $('#prev').addEventListener('click', () => move(-1));
   $('#next').addEventListener('click', () => move(1));
-  $('#timer-toggle').addEventListener('click', () => state.timerStartedAt === null ? startTimer() : pauseTimer());
-  $('#timer-reset').addEventListener('click', () => { state.elapsed = 0; state.timerStartedAt = null; updateTimer(); });
   $('#fullscreen').addEventListener('click', async () => {
     try {
       if (document.fullscreenElement) await document.exitFullscreen();
@@ -393,5 +372,4 @@
   render();
   syncURL();
   requestAnimationFrame(() => { if (state.current !== state.data.slides[0].id || state.mode === 'present') goTo(state.current); });
-  setInterval(updateTimer, 250);
 })();

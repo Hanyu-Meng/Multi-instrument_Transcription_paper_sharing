@@ -1,36 +1,34 @@
-# 听见每一个声部 · Hear Every Part
+# 多乐器音乐转录 · Multi-instrument Music Transcription
 
-**[打开中文网站](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=zh)** · **[Open in English](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=en)** · **[直接开始演示](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=zh&mode=present#intro)**
+**[中文版](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=zh)** · **[English](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=en)** · **[演示模式](https://hanyu-meng.github.io/Multi-instrument_Transcription_paper_sharing/?lang=zh&mode=present#intro)**
 
-有图、有试听、有讲者笔记的多乐器自动音乐转录 literature review。为一次 **40 分钟 paper sharing** 设计：38 分钟讲解 + 2 分钟讨论，其中 **14 分钟聚焦 MuScriptor**。内容核对日期：2026-10-13。
+多乐器自动音乐转录的双语文献综述，涵盖任务定义、方法演进、数据与评测、现有挑战，以及 MuScriptor 的模型设计、训练策略和实验结果。内容核对日期：2026-10-13。
 
-An illustrated, bilingual review of multi-instrument automatic music transcription. A **38-minute guided talk + 2-minute discussion**, with **14 minutes on MuScriptor**. Research checked on 2026-10-13.
+A bilingual literature review of multi-instrument automatic music transcription, covering task definitions, methodological developments, data and evaluation, open challenges, and a detailed examination of MuScriptor. Research checked on 2026-10-13.
 
-## 怎么用 / How to use
+## 阅读与交互 / Reading and navigation
 
-- 在右上角切换 **中文 / English**；页面、图示、讲者笔记与文献解读一起切换。
-- 点击“开始演示”逐页讲解；首页“开始40分钟分享”同时启动计时器。计时可暂停、重置。
-- **← / →** 或 **PageUp / PageDown** 翻页，**Home / End** 跳到首尾，**Esc** 返回阅读。
-- “讲者笔记 / Speaker notes”显示每页的讲解建议。笔记在当前页面内显示，投屏时请按需关闭。
+- 右上角可切换 **中文 / English**；正文、图示、补充说明与文献解读同步切换。
+- **演示模式**支持逐页浏览；**← / →** 或 **PageUp / PageDown** 翻页，**Home / End** 跳到首尾，**Esc** 返回阅读。
+- **补充说明 / Notes**提供方法细节、评测条件与阅读提示。
 - 文献库支持中英文关键词搜索、类别筛选，以及逐篇展开“贡献与局限”。
-- 4秒试听可开关三个合成声部；它是**教学示例，非模型推理或模型效果对比**。
-- 页面可用浏览器打印为PDF；网站本身不依赖后端或模型服务。部分密集页面及手机界面可纵向滚动。
+- 交互式音频示例可开关三个合成声部，用于展示混音中的声部重叠；它不运行转录模型，也不是模型效果对比。
+- 支持浏览器打印为PDF。网站无需后端或模型服务，密集页面和手机界面支持纵向滚动。
 
-The language toggle updates content, illustrations, notes and paper reviews together. Presentation mode supports keyboard navigation, a 40-minute timer and fullscreen. The paper library supports bilingual search and category filters. Speaker notes appear inline, so close them when projecting if desired. The synthetic listening example runs locally in the browser and is not model inference. Use browser printing for a printable copy.
+The language toggle updates content, illustrations, notes and paper reviews together. Presentation mode supports keyboard navigation and fullscreen. The paper library provides bilingual search and category filters. Additional notes document methodological details and evaluation conditions. The synthetic audio example runs locally in the browser; it is not model inference. Use browser printing for a printable copy.
 
-## 40 分钟路线 / The 40-minute route
+## 综述结构 / Review structure
 
-| 时间 / Time | 内容 / Topic | 目标 / Purpose |
-| --- | --- | --- |
-| 00–04 | 任务定义与试听 / Task & listening | 谁、什么音、何时开始和结束 / Who, what pitch, when |
-| 04–09 | 挑战与方法 / Challenges & method families | 谐波重叠；分解、检测与事件解码 / Overlap; factorization, detection, events |
-| 09–18 | 代表性文献 / Milestones | NMF → Onsets & Frames → Slakh → MT3 → Jointist / YourMT3+ |
-| 18–22 | 指标与数据 / Metrics & data | 不混淆F1；理解合成到真实的差距 / Understand metrics and the domain gap |
-| 22–36 | **MuScriptor** | 架构、三阶段训练、乐器条件、结果与局限 / Architecture, training, conditions, evidence, limits |
-| 36–38 | 近期方向与讨论引导 / Frontiers & prompts | 预训练表征、效率、audio-to-score / Representations, efficiency, notation |
-| 38–40 | 自由讨论 / Open discussion | 从最后一页选一个问题 / Pick one closing question |
+| 主题 / Topic | 内容 / Scope |
+| --- | --- |
+| 任务定义 / Task formulation | 音高、时间与乐器归属 / Pitch, timing and instrument attribution |
+| 挑战与方法 / Challenges & method families | 谐波重叠；分解、检测与事件解码 / Harmonic overlap; factorization, detection and events |
+| 代表性文献 / Representative literature | NMF → Onsets & Frames → Slakh → MT3 → Jointist / YourMT3+ |
+| 指标与数据 / Metrics & data | 评测协议与合成到真实的迁移 / Evaluation protocols and synthetic-to-real transfer |
+| MuScriptor | 架构、三阶段训练、乐器条件、结果与局限 / Architecture, training, conditioning, results and limitations |
+| 研究方向 / Research directions | 预训练表征、推理效率、audio-to-score与开放问题 / Representations, efficiency, notation and open questions |
 
-完整双语逐页讲解建议：[Presenter guide](docs/PRESENTER_GUIDE.md)。
+[双语阅读补充说明 / Bilingual reading notes](docs/PRESENTER_GUIDE.md)。
 
 ## 主要文献 / Selected sources
 
@@ -47,9 +45,9 @@ The language toggle updates content, illustrations, notes and paper reviews toge
 11. [Harmonica — September 2026](https://arxiv.org/abs/2609.04640) · **adjacent: instrument-agnostic**
 12. [TUTTI — September 2026](https://arxiv.org/abs/2609.00640) · **adjacent: audio-to-score**
 
-这是一条精选教学路线，不是穷尽式综述，也不是统一排行榜。论文、官方代码、演示链接和每项结论的出处都在网页中。
+这是一条精选文献综述，不是穷尽式综述，也不是统一排行榜。论文、官方代码、演示链接和每项结论的出处都在网页中。
 
-This is a curated teaching route, not an exhaustive survey or universal leaderboard. The website links original papers, official code and demos alongside the relevant claims.
+This is a curated literature review, not an exhaustive survey or universal leaderboard. The website links original papers, official code and demos alongside the relevant claims.
 
 ## 阅读 MuScriptor 结果时 / Interpreting MuScriptor
 
@@ -77,7 +75,7 @@ node scripts/check.mjs
 node scripts/export-guide.mjs
 ```
 
-`check.mjs` 检查双语页面/文献一致性、38分钟总时长、本地素材和出处结构。`export-guide.mjs` 从网页内容生成讲稿，避免两处维护。
+`check.mjs` 检查双语页面/文献一致性、本地素材和出处结构。`export-guide.mjs` 从网页内容生成阅读补充说明，避免两处维护。
 
 提交修改后，运行以下脚本：检查内容、推送 `main`，再把 `site/` 发布到 `gh-pages` 分支。GitHub Pages 配置为从 `gh-pages` 根目录发布，无需 Actions workflow 权限。
 
